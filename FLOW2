@@ -1,0 +1,83 @@
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+
+public class OutBndEmailAprvILNKHandler implements RequestHandler<String, String> {
+
+    @Override
+    public String handleRequest(String input, Context context) {
+        // Get the database connection information and email service configuration
+        String dbConnectionString = context.getParam("dbConnectionString");
+        String emailServiceUrl = context.getParam("emailServiceUrl");
+
+        try {
+            // Process the outbound email
+            if (context.getParam("partialSendKey").equals("YES")) {
+                // Send the email with partial send
+                sendEmailWithPartialSend(dbConnectionString, emailServiceUrl);
+            } else {
+                // Send the email without partial send
+                sendEmailWithoutPartialSend(dbConnectionString, emailServiceUrl);
+            }
+
+            // Insert the outbound email into the database
+            if (context.getParam("insertForAudit").equals("true")) {
+                // Insert the outbound email into the database
+                insertOutboundEmailIntoDatabase(dbConnectionString);
+            }
+
+            // Perform the email post send service
+            if (context.getParam("emailPostSendServiceKey").equals("YES")) {
+                // Perform the email post send service
+                performEmailPostSendService(dbConnectionString, emailServiceUrl);
+            }
+
+            // Mark the inbound email as completed
+            if (!context.getParam("isNotification").equals("true")) {
+                // Mark the inbound email as completed
+                markInboundEmailAsCompleted(dbConnectionString);
+            }
+        } catch (Exception e) {
+            // Handle the error
+            System.err.println("Error processing outbound email: " + e.getMessage());
+            return "OutBndEmailAprvILNK - Error";
+        }
+
+        // Return the success message
+        return "OutBndEmailAprvILNK - Success";
+    }
+
+    private void sendEmailWithPartialSend(String dbConnectionString, String emailServiceUrl) {
+        // Logic to send the email with partial send
+        // Replace with your actual implementation
+        System.out.println("Sending email with partial send - DB Connection: " + dbConnectionString + ", Email Service URL: " + emailServiceUrl);
+        // ...
+    }
+
+    private void sendEmailWithoutPartialSend(String dbConnectionString, String emailServiceUrl) {
+        // Logic to send the email without partial send
+        // Replace with your actual implementation
+        System.out.println("Sending email without partial send - DB Connection: " + dbConnectionString + ", Email Service URL: " + emailServiceUrl);
+        // ...
+    }
+
+    private void insertOutboundEmailIntoDatabase(String dbConnectionString) {
+        // Logic to insert the outbound email into the database
+        // Replace with your actual implementation
+        System.out.println("Inserting outbound email into database - DB Connection: " + dbConnectionString);
+        // ...
+    }
+
+    private void performEmailPostSendService(String dbConnectionString, String emailServiceUrl) {
+        // Logic to perform the email post send service
+        // Replace with your actual implementation
+        System.out.println("Performing email post send service - DB Connection: " + dbConnectionString + ", Email Service URL: " + emailServiceUrl);
+        // ...
+    }
+
+    private void markInboundEmailAsCompleted(String dbConnectionString) {
+        // Logic to mark the inbound email as completed
+        // Replace with your actual implementation
+        System.out.println("Marking inbound email as completed - DB Connection: " + dbConnectionString);
+        // ...
+    }
+}
